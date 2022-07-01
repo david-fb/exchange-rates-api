@@ -4,36 +4,48 @@ const latestService = new LatestService();
 
 class ConvertService {
   async convert(amount, from, to) {
+    const query = from + ',' + to;
+    const { timestamp, rates } = await latestService.filter(query);
+
+    let response = this.calculateExchangeRate(rates, from, to, amount);
+
+    return {
+      timestamp,
+      amount,
+      from,
+      to,
+      ...response,
+    };
+  }
+
+  calculateExchangeRate(rates, from, to, amount = 1) {
     amount = Number(amount);
     if (Number.isNaN(amount)) {
       throw boom.badData('amount must be of type number');
     }
-    const query = from + ',' + to;
-    const { timestamp, rates } = await latestService.filter(query);
 
     if (!rates[from] || !rates[to]) {
       throw boom.badData('exchange rate type not supported');
     }
 
-    let response = 0;
+    let result = 0;
+
     if (to === 'USD') {
-      response = amount / rates[from];
+      result = amount / rates[from];
     } else if (from === 'USD') {
-      response = amount * rates[to];
+      result = amount * rates[to];
     } else {
       let fromUSDValue = amount / rates[from];
-      response = fromUSDValue * rates[to];
+      result = fromUSDValue * rates[to];
     }
 
-    const unit = Number((response / amount).toFixed(5));
+    const unitFrom = Number((result / amount).toFixed(5));
+    const unitTo = Number((amount / result).toFixed(5));
 
     return {
-      timestamp,
-      unit,
-      amount,
-      from,
-      to,
-      response: Number(response.toFixed(2)),
+      unitTo,
+      unitFrom,
+      result: Number(result.toFixed(2)),
     };
   }
 }
