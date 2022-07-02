@@ -12,14 +12,15 @@ class ConvertService {
     return {
       timestamp,
       amount,
-      from,
-      to,
       ...response,
     };
   }
 
   calculateExchangeRate(rates, from, to, amount = 1) {
     amount = Number(amount);
+    from = from.toUpperCase();
+    to = to.toUpperCase();
+
     if (Number.isNaN(amount)) {
       throw boom.badData('amount must be of type number');
     }
@@ -43,7 +44,9 @@ class ConvertService {
     const unitTo = Number((amount / result).toFixed(5));
 
     return {
+      from,
       unitTo,
+      to,
       unitFrom,
       result: Number(result.toFixed(2)),
     };

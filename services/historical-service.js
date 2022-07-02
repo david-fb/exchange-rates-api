@@ -11,6 +11,8 @@ dayjs.extend(customParseFormat);
 class HistoricalService {
   async from(date, symbol1, symbol2) {
     const symbols = symbol1 + ',' + symbol2;
+    symbol1 = symbol1.toUpperCase();
+    symbol2 = symbol2.toUpperCase();
 
     if (!dayjs(date, 'YYYY-MM-DD', true).isValid()) {
       throw boom.badData(
