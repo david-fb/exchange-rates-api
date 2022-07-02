@@ -1,6 +1,6 @@
 # Exchange rates API
 
-Data from the Open Exchange Rates API with free plan
+Data from the Open Exchange Rates API using the free plan
 
 ## Environment Variables
 
