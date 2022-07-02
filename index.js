@@ -4,6 +4,8 @@ const cors = require('cors');
 const app = express();
 const { config } = require('./config');
 const port = config.port;
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./documentation/swagger.json');
 
 const {
   logErrors,
@@ -15,6 +17,7 @@ const NotFound = require('./middlewares/404-handler');
 app.use(express.json());
 app.use(cors());
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 routerApi(app);
 
 app.use(logErrors);

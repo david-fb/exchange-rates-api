@@ -1,0 +1,173 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "version": "1.0.0",
+    "title": "Exchange rates API",
+    "contact": {
+      "name": "davidbasto01@gmail.com"
+    }
+  },
+  "servers": [{"url": "/api/v1"}],
+  "tags": [
+    {
+      "name": "currencies"
+    },
+    {
+      "name": "historical"
+    },
+    {
+      "name": "latest"
+    },
+    {
+      "name": "convert"
+    }
+  ],
+  "paths": {
+    "/currencies": {
+      "get": {
+        "tags": ["currencies"],
+        "summary": "Returns available currencies",
+        "parameters": [
+          {
+            "name": "show_alternative",
+            "in": "query",
+            "description": "include the list of unofficial, black market and alternative digital currencies",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/historical/{date}/{symbol1}/{symbol2}": {
+      "get": {
+        "tags": ["historical"],
+        "summary": "Get historical exchange rates for any date available from the Open Exchange Rates API, currently going back to 1st January 1999.",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "description": "The requested date in YYYY-MM-DD format (required).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "symbol1",
+            "in": "path",
+            "description": "Specific currency (required).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 3
+            }
+          },
+          {
+            "name": "symbol2",
+            "in": "path",
+            "description": "Specific currency (required).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 3
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "422": {
+            "description": "params type not supported - historical rates for the requested date are not available",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "response message failed with status code 400 - The date requested is invalid",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/latest": {
+      "get": {
+        "tags": ["latest"],
+        "summary": "Returns the latest exchange rates available from the Open Exchange Rates API, base currency USD",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/convert/{amount}/{from}/{to}": {
+      "get": {
+        "tags": ["convert"],
+        "summary": "Convert any money value from one currency to another at the latest API rates",
+        "parameters": [
+          {
+            "name": "amount",
+            "in": "path",
+            "description": "The value to be converted",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "from",
+            "in": "path",
+            "description": "The base ('from') currency (3-letter code)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 3
+            }
+          },
+          {
+            "name": "to",
+            "in": "path",
+            "description": "The target ('to') currency (3-letter code)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 3
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}
