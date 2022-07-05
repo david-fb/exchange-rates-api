@@ -48,7 +48,7 @@ class ConvertService {
       unitTo,
       to,
       unitFrom,
-      result: Number(result.toFixed(2)),
+      result: Number(result.toFixed(5)),
     };
   }
 }
