@@ -40,16 +40,24 @@ class ConvertService {
       result = fromUSDValue * rates[to];
     }
 
-    const unitFrom = Number((result / amount).toFixed(5));
-    const unitTo = Number((amount / result).toFixed(5));
+    const unitFrom = this.#formarDecimals(result / amount);
+    const unitTo = this.#formarDecimals(amount / result);
 
     return {
       from,
       unitTo,
       to,
       unitFrom,
-      result: Number(result.toFixed(5)),
+      result: this.#formarDecimals(result),
     };
+  }
+
+  #formarDecimals(number) {
+    if (number.toFixed(0) === '0') {
+      return Number(number.toFixed(5));
+    } else {
+      return Number(number.toFixed(2));
+    }
   }
 }
 
